@@ -27,21 +27,11 @@ namespace DBandAPIInterviewProject.Controllers
         public async Task<IActionResult> Index()
         {
 
-            string jsonResponse = await GetApiResponse(starWars);
+            DataTable dataTable = await GetStarWarsData(starWars);
 
-            dynamic data = JObject.Parse(jsonResponse);
+            PrintDataTable(dataTable);
 
-            
-
-            foreach (var character in data["results"])
-            {
-                string name = character["name"].ToString();
-                Console.WriteLine($"Name: {name}");
-            }
-
-            //DataTable dt = (DataTable)JsonConvert.DeserializeObject(data["results"], (typeof(DataTable)));
-
-            return View();
+            return View(dataTable);
         }
 
         public IActionResult Privacy()
@@ -126,6 +116,63 @@ namespace DBandAPIInterviewProject.Controllers
                 }
             }
         }
-    }
 
+        static async Task<DataTable> GetStarWarsData(string apiUrl)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string data = await response.Content.ReadAsStringAsync();
+                    JObject json = JsonConvert.DeserializeObject<JObject>(data);
+                    JArray results = json.Value<JArray>("results");
+
+                    return ConvertToDataTable(results);
+                }
+                else
+                {
+                    throw new Exception($"Failed to retrieve data. Status code: {response.StatusCode}");
+                }
+            }
+        }
+
+        static DataTable ConvertToDataTable(JArray jsonArray)
+        {
+            DataTable dataTable = new DataTable();
+
+            // Create columns based on the keys in the first object
+            foreach (JProperty property in jsonArray.First().Children<JProperty>())
+            {
+                dataTable.Columns.Add(property.Name, typeof(string));
+            }
+
+            // Populate the DataTable with data from the JSON array
+            foreach (JObject item in jsonArray)
+            {
+                DataRow row = dataTable.NewRow();
+                foreach (JProperty property in item.Children<JProperty>())
+                {
+                    row[property.Name] = property.Value.ToString();
+                }
+                dataTable.Rows.Add(row);
+            }
+
+            return dataTable;
+        }
+
+        static void PrintDataTable(DataTable dataTable)
+        {
+            foreach (DataRow row in dataTable.Rows)
+            {
+                foreach (DataColumn col in dataTable.Columns)
+                {
+                    Console.Write($"{col.ColumnName}: {row[col]}   ");
+                }
+                Console.WriteLine();
+            }
+        }
+    }
 }
+
