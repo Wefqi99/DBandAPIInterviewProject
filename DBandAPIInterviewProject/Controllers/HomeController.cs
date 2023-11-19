@@ -36,8 +36,9 @@ namespace DBandAPIInterviewProject.Controllers
 
         public IActionResult Privacy()
         {
+            //Replace DB Connectin string here
             string connectionString = "server=DESKTOP-CHS98C4;uid=secondUser;pwd=Silwad-14113;database=students;";
-
+            //Replace name of table
             string tableName = "studentInformation";
 
             DataTable dataTable = GetTableData(connectionString, tableName);
@@ -142,13 +143,11 @@ namespace DBandAPIInterviewProject.Controllers
         {
             DataTable dataTable = new DataTable();
 
-            // Create columns based on the keys in the first object
             foreach (JProperty property in jsonArray.First().Children<JProperty>())
             {
                 dataTable.Columns.Add(property.Name, typeof(string));
             }
 
-            // Populate the DataTable with data from the JSON array
             foreach (JObject item in jsonArray)
             {
                 DataRow row = dataTable.NewRow();
