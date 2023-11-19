@@ -15,28 +15,27 @@
 
     <body class="bg-cyan-900 flex-column justify-content-center items-center h-screen">
         <div class="mb-8">
-            <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-8" asp-controller="Home" asp-action="Index">Switch to Holiday Info</a>
+            <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-8" asp-controller="Home" asp-action="Index">Switch to API Info</a>
         </div>
         <table class="shadow-2x1 font-[Poppins] border-2 border-cyan-200 w-6/12">
             <thead class="text-white">
                 <tr>
                 @foreach (DataColumn column in Model.Columns)
                     {
-                    <th class="py-3 bg bg-cyan-800">@column.ColumnName</th>
+                        <th class="py-3 bg bg-cyan-800">@column.ColumnName</th>
                     }
                 </tr>
             </thead>
             <tbody>
-            @foreach (DataRow row in Model.Rows)
-            {
-                <tr class="bg-cyan-400 cursor-pointer duration-300">
-                    <td class="py-3 px-6">@row["studentId"]</td>
-                    <td class="py-3 px-6">@row["lastName"]</td>
-                    <td class="py-3 px-6">@row["firstName"]</td>
-                    <td class="py-3 px-6">@row["email"]</td>
-                    <td class="py-3 px-6">@row["phoneNumber"]</td>
-                </tr>
-            }
+                @foreach (DataRow row in Model.Rows)
+                {
+                    <tr class="bg-cyan-400 cursor-pointer duration-300">
+                        @foreach (DataColumn col in Model.Columns)
+                        {
+                            <td class="py-3 px-6">@row[col.ColumnName]</td>
+                        }
+                    </tr>
+                }
             </tbody>
         </table>
     </body>

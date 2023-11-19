@@ -21,15 +21,23 @@
         <div>
             <table class="shadow-2x1 font-[Poppins] border-2 border-cyan-200 w-6/12">
                 <thead class="text-white">
-                    <tr>
+@*                     <tr>
                     @foreach (DataColumn col in Model.Columns)
                     {
                         <th class="py-3 bg bg-cyan-800">@col.ColumnName</th>
                     }
+                    </tr> *@
+
+                    <tr class="bg-cyan-400 cursor-pointer duration-300">
+                        <th class ="py-3 bg bg-cyan-800">Name</th>
+                        <th class="py-3 bg bg-cyan-800">Height</th>
+                        <th class="py-3 bg bg-cyan-800">Mass</th>
+                        <th class="py-3 bg bg-cyan-800">Hair Color</th>
+                        <th class="py-3 bg bg-cyan-800">Skin Color</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (DataRow row in Model.Rows)
+@*                     @foreach (DataRow row in Model.Rows)
                     {
                         <tr class="bg-cyan-400 cursor-pointer duration-300">
                             @foreach (DataColumn col in Model.Columns)
@@ -37,7 +45,21 @@
                                 <td class="py-3 px-6">@row[col.ColumnName]</td>
                             }
                         </tr>
+                    } *@
+
+
+                    @foreach (DataRow row in Model.Rows)
+                    {
+                        <tr class="bg-cyan-400 cursor-pointer duration-300">
+
+                                <td class="py-3 px-6">@row["name"]</td>
+                                <td class="py-3 px-6">@row["height"]</td>
+                                <td class="py-3 px-6">@row["mass"]</td>
+                                <td class="py-3 px-6">@row["hair_color"]</td>
+                                <td class="py-3 px-6">@row["skin_color"]</td>
+                        </tr>
                     }
+
                 </tbody>
             </table>
         </div>
